@@ -1,0 +1,36 @@
+# Install prerequisites:
+
+```
+sudo apt install ocaml opam
+```
+
+
+Create the opam environment:
+
+```
+opam init
+eval $(opam env)
+```
+
+Install the opam packages:
+
+```
+opam install dune ocamlfind
+```
+
+
+
+# Building DSL Compiler
+
+Builds must be done from the DSLCompiler directory:
+
+```
+cd DSLCompiler
+
+dune build
+```
+
+This creates an executable ./_build/default/src/compile.exe, which you can
+run using:
+
+./_build/default/src/compile.exe

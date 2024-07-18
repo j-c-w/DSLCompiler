@@ -1,0 +1,24 @@
+# Overview
+
+This project is a demonstration of a simple DSL compiler.
+
+The project has the following structure:
+
+```
+src/   <- this is the source files, most of your editing goes here
+_build/   <- this is the build results.
+test    <- this is the tests, which go in here
+```
+
+
+Within the `src` folder, we have the following structure:
+
+
+```
+frontend/ <--- This contains the lexer, parser and typechecker
+midend/   <--- This contians the middle end of the compiler, that lowers and transforms the code
+backend/  <--- This conatins the code generation part of the compiler
+compiler.ml <-- This links together the compiler into one executable
+options.ml  <-- This contains compiler-wide settings and argument processing
+```
+
