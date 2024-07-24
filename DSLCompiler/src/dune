@@ -1,0 +1,10 @@
+(include_subdirs unqualified)
+
+(executable
+ (name compiler)
+ (public_name compiler)
+ (libraries cmdliner menhirLib core_kernel)
+ (preprocess (pps ppx_deriving.show))
+ )
+(menhir (modules parser))
+(ocamllex lexer)
