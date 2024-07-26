@@ -1,6 +1,6 @@
 (lang dune 3.16)
 
-(name DSLCompiler)
+(name compiler)
 
 (generate_opam_files true)
 
@@ -15,8 +15,10 @@
 
 (documentation https://url/to/documentation)
 
+(using menhir 3.0)
+
 (package
- (name DSLCompiler)
+ (name compiler)
  (synopsis "A short synopsis")
  (description "A longer description")
  (depends ocaml dune)

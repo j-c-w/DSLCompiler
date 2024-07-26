@@ -2,6 +2,11 @@ open Cmdliner
 open Options
 open Utils
 
+let run_clang_tidy file =
+	let command = "clang-format -i -style=llvm " ^ file in
+	let _ = Sys.command command in
+	()
+
 (* Main entry point post argument processing.  *)
 let main options =
     let file = options.input_file in
@@ -10,6 +15,8 @@ let main options =
     let lowered = Midend.lower options parsed in
     let target = Backend.lower options lowered in
     let _ = write_file options.output_file target in
+	(* format the generated C code so it is more readable.  *)
+	let _ = run_clang_tidy options.output_file in
     ()
 
 (* Handle the argument processing *)

@@ -15,10 +15,94 @@ Within the `src` folder, we have the following structure:
 
 
 ```
-frontend/ <--- This contains the lexer, parser and typechecker
 midend/   <--- This contians the middle end of the compiler, that lowers and transforms the code
 backend/  <--- This conatins the code generation part of the compiler
+lexer.mll <-- this constains the lexer
+parser.mly <-- this contains the parser
+ast.ml     <-- this this contains the frontend ast used by the parser
 compiler.ml <-- This links together the compiler into one executable
 options.ml  <-- This contains compiler-wide settings and argument processing
+utils.ml    <-- This contains a few functions related to IO
 ```
 
+# Compiler Structure
+
+This compiler has three different IRs, which is typical for a number of compilers.
+
+The first IR is called Ast, and is defined in ast.ml.  It is designed to be the
+IR that we parse into, and has a very simliar structure to the syntax tree.
+Typechecking, and various simplifications should be done at this level.
+
+The second IR is called Mast, and is defined in midend/mast.ml.  For this compiler,
+this is identical to Ast, but generally it can be used to eliminate syntax-specific
+features to enable optimization at the DSL level.  In this compiler, very little
+work is done at this level of representation.
+
+The final IR is called `backend_ir`, and is defined in backend/bast.ml.  This is
+close to the target language (in this case C), and so has features like loops and
+array indexing.    The generator for this code is in backend/backend.ml.
+
+Finally, we lower this IR into C code as an output.  The generator for the C
+code is simple because the IR is designed to have a direct and easy mapping into C.
+
+
+# Testing
+In the test/ folder, there are a few files to help test this compiler.  First,
+we have a file test_input.vec, which contains a DSL program we want to build.
+
+We can build this with the command:
+
+```
+dune exec compiler test_input.vec
+```
+
+This creates a file `out.c`.  The file `test.c` is a test-generator
+for 2, 2x2 input matrices.  We can run:
+
+```
+gcc test.c
+./a.out
+```
+
+to run the program in test_input.vec on these input matrices.
+
+# The C Headers
+Since this compiler generates C code as output, it comes with
+some C headers and context for running the code that contains
+the types required for this DSL.
+
+These are in c_lib/.
+
+
+# Dune Bulid system.
+
+This project uses the dune build system.  Each folder
+has a `dune` file that specifies the instructions,
+and the project has a `dune-project` file that specifies
+project information.
+
+To build the project, run:
+
+```
+dune build
+```
+
+If you get an error talking about running `init`, you are probably
+in the wrong folder.
+
+from the DSLCompiler folder.  This will produce an executable
+`./_build/default/bin/compiler.exe` that you can run.
+
+To add a new folder to the project, you should do the following:
+
+```
+1. Make the folder
+2. Add a dune file, with the following format:
+
+(library
+  (name NAME)
+  (public_name Compiler.NAME)
+  (modules File1 File2 ...)
+)
+3. In the top-level dune file, add the NAME to (libraries ... NAME)
+```

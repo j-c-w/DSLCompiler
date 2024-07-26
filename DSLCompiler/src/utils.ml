@@ -1,11 +1,19 @@
+open Core
+
 let read_file filename =
-    let ic = open_in filename in
-    let n = in_channel_length ic in
-    let s = really_input_string ic n in
-    close_in ic;
-    s
+	In_channel.with_file filename ~f:In_channel.input_all
 
 let write_file filename content =
-  let oc = open_out filename in
-  output_string oc content;
-  close_out oc
+	Out_channel.with_file filename ~f:(fun oc ->
+		Out_channel.output_string oc content
+	)
+
+
+let rec unique_merge_lists eq (l1: 'a list) (l2: 'a list): 'a list =
+	match l1 with
+	| [] -> l2
+	| l :: ls ->
+			if List.mem l2 l ~equal:eq then
+				unique_merge_lists eq ls l2
+			else
+				l :: (unique_merge_lists eq ls l2)

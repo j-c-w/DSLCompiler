@@ -1,7 +1,7 @@
 # Install prerequisites:
 
 ```
-sudo apt install ocaml opam
+sudo apt install ocaml opam clang-format
 ```
 
 
@@ -15,7 +15,7 @@ eval $(opam env)
 Install the opam packages:
 
 ```
-opam install dune ocamlfind
+opam install dune ocamlfind cmdliner menhirLib menhir core_kernel
 ```
 
 
